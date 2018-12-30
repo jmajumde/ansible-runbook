@@ -1,11 +1,11 @@
-#### ssh keyscan
+### ssh keyscan
 Once the vagrang vms are up and running, we can scan the ssh pubkeys from target vms and add the keys into the known_hosts file for mgmt vm. This is one way to avoid the ssh trusted known hosts confirmation prompt
 
 > ssh-keyscan lb web1 web2 >> .ssh/known_hosts
 
 
-####Ansible ad-hoc commands
-[https://assets.sysadmincasts.com/e/g/43-ansible-multi-node-deployment-workflow.png]
+### Ansible ad-hoc commands
+(https://assets.sysadmincasts.com/e/g/43-ansible-multi-node-deployment-workflow.png)
 
 > ansible all -m ping --ask-pass
 
@@ -28,7 +28,7 @@ Though ansible has a provision to execute ad-hoc commands but that not the actua
 
 > ansible all -m shell -a "uname -a"
 
-#### Gathering gather_facts
+### Gathering gather_facts
 We can run an ad-hoc version, like this, ansible web1 -m setup
 
 > ansible web1 -m setup | less
@@ -39,10 +39,10 @@ Lets add the argument option, and pass in, filter=ansible_distribution. So, you 
 
 > ansible web1 -m setup -a "filter=ansible_distribution*"
 
-#### Template and var
+### Template and var
 Ansible uses default jinja2 templating syntax. Check ntp-template.yml playbook and the corresponsing template is under template/ntp.conf.j2
 
-#### Configuration mgmt of load balancer and nginx
+### Configuration mgmt of load balancer and nginx
 The site.yml playbook has complete code for the HAProxy load balancer deployment and install, config nginx web hosts. The web page url should be localhost port 8080 which redirects to 80 in lb vagrant vm.
 
 We can check the haproxy load balancer statistic page
@@ -56,12 +56,12 @@ sudo apt-get install apache2-utils
 ab -n 10000 -c 25 http://localhost:8080/
 ```
 
-#### Roles, make the tasks moduler
+### Roles, make the tasks moduler
 The role-site.yml has three plays in it, common, web, and lb just like site.yml but  it is much sorter, there is no tasks sections, but rather this roles definition. Roles allow you to remove bulky configuration out of the playbook, and into a folder structure called a role. The entire goal of this, is to make things modular, so that you can share and reuse roles, along with not having playbooks that are thousands of lines long
 
 
-#### Zero-downtime rolling updates/patching/deployment
-[https://assets.sysadmincasts.com/e/g/47-ansible-serial-pre-post-task-orchestration.gif]
+### Zero-downtime rolling updates/patching/deployment
+(https://assets.sysadmincasts.com/e/g/47-ansible-serial-pre-post-task-orchestration.gif)
 
 For each node that we update, we want to verify that nginx is installed, and it has the correct config file. These steps are not required for a deployment, but is makes sense to ensure our hosting environment is in a sane state, and that is conforms to our known good requirements. Then, we will remove the existing website, and deploy our new website, and finally restart nginx if needed.
 
@@ -80,6 +80,7 @@ So in a nutshell, below is what we need to achieve through playbooks.
     - enable web node in haproxy
 
 To disable the web node from haproxy mark the server DOWN for maintenance. In this mode, no more checks will be performed on the server until it leaves maintenance.
+
 [http://cbonte.github.io/haproxy-dconv/1.9/management.html#9.3-disable%20server]
 
 ```
